@@ -32,6 +32,11 @@ class App{
             return; // return sempre sai da função
         } 
 
+        //Ativa o carregamento
+        this.apresentarBuscando();
+
+        try{
+
         let response = await api.get(`/repos/${input}`);
 
         //console.log(response);
@@ -48,6 +53,32 @@ class App{
         // renderizar a tela
         this.renderizarTela();
         console.log(this.lista);
+    } catch(erro){
+         //Limpa buscando
+         this.lista.removeChild(document.querySelector('.list-group-item-warning'));
+
+         //Limpar erro existente
+        let er = this.lista.querySelector('.list-group-item-danger');
+        if (er !== null){
+            this.lista.removeChild(er);
+        }
+
+        //<li>
+        let li = document.createElement('li');
+        li.setAttribute('class', 'list-group-tem list-group-item-danger');
+        let txtErro = document.createTextNode(`O repositório ${input} não existe`);
+        li.appendChild(txtErro);
+        this.lista.appendChild(li);
+    }
+    }
+
+    apresentarBuscando(){
+        //<li>
+        let li = document.createElement('li');
+        li.setAttribute('class', 'list-group-tem list-group-item-warning');
+        let txtBuscando = document.createTextNode(`Aguarde, buscando o repositório...`);
+        li.appendChild(txtBuscando);
+        this.lista.appendChild(li);
     }
 
     renderizarTela(){
